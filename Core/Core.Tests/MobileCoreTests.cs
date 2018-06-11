@@ -200,5 +200,22 @@ namespace AeroGear.Mobile.Core.Tests
             MobileCore.Instance.Destroy();
         }
 
+        [Test]
+        public void TestServiceConfigByUpperCaseType()
+        {
+            MobileCore.Init(new TestInjector(Assembly.GetExecutingAssembly()));
+            var serviceConfigByType = MobileCore.Instance.GetServiceConfigurationByType("DUMMY");
+            MobileCore.Instance.RegisterService<IDummyModule>(new DummyModule(serviceConfigByType[1]));
+
+            var module = MobileCore.Instance.GetService<IDummyModule>();
+            Assert.IsNotNull(module);
+            Assert.AreEqual("dummy", module.Type);
+            Assert.AreEqual("Hello world, from anotherdummy!", module.Data1);
+            Assert.AreEqual(420, module.Data2);
+            Assert.IsFalse(module.Data3);
+
+            MobileCore.Instance.Destroy();
+        }
+
     }
 }
